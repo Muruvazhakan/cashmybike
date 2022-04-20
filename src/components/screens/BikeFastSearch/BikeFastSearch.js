@@ -43,7 +43,8 @@ function BikeFastSearch(props) {
         bikecondition: "",
         allRange: ["Fair", "Good", "Excellent"],
         range: 0,
-        rangetext:''
+        rangetext: '',
+        insurance:false,
     };
     const [selecteddata, setSelecteddata] = React.useState(initialdata);
 
@@ -255,26 +256,23 @@ function BikeFastSearch(props) {
 
     const handleRange = (val) => {
         console.log(val.target.value);
-        
-        let rangetex="";
+
+        let rangetex = "";
         // allRange: ["Fair", "Good", "Excellent"],
-        if(val.target.value == 0)
-        {
-            rangetex="Fair";
+        if (val.target.value == 0) {
+            rangetex = "Fair";
         }
-        if(val.target.value == 1)
-        {
-            rangetex="Good";
+        if (val.target.value == 1) {
+            rangetex = "Good";
         }
-        if(val.target.value == 2)
-        {
-            rangetex="Excellent";
+        if (val.target.value == 2) {
+            rangetex = "Excellent";
         }
         console.log(rangetex);
         setSelecteddata({
             ...selecteddata,
-            rangetext:rangetex,
-            range:val.target.value
+            rangetext: rangetex,
+            range: val.target.value
 
         });
     }
@@ -305,133 +303,142 @@ function BikeFastSearch(props) {
         });
 
     }
+    
+    const handleInsurance = (val) => {
+   
+        console.log(val.target.checked);
+        setSelecteddata({
+            ...selecteddata,
+            insurance: val.target.checked
 
+        });
+    }
     return (
         <>
 
 
             <div className=" card-style1">
-                <OurSteps/>
+                <OurSteps />
                 <animate.Fade left delay={1100}>
-                <div className='Sell-bike-header'> Select the Bike Models</div>
+                    <div className='Sell-bike-header'> Select the Bike Models</div>
                 </animate.Fade>
                 <animate.Fade right delay={1200}>
-                <Card className=" card-group">
-                
-                    <InputGroup >
+                    <Card className=" card-group">
 
-                        <DropdownButton
-                            variant="outline-secondary"
-                            //title="Brand"
-                            id="input-group-dropdown-1"
-                            className="group1-style"
-                            size="1px"
-                            onSelect={handleBrandSelect}
-                            title={selecteddata.brand == "" ? `${selecteddata.defaultvalue} Brand` : selecteddata.brand}
-                        >
-                            {/* {datas.brand.map((data, key) => ( */}
-                            {selecteddata.allbrand.map((data, key) => (
-                                <Dropdown.Item eventKey={data} key={key} title={data} >{data}</Dropdown.Item>
-                            ))}
-                        </DropdownButton>
+                        <InputGroup >
 
-                        <DropdownButton
-                            variant="outline-secondary"
+                            <DropdownButton
+                                variant="outline-secondary"
+                                //title="Brand"
+                                id="input-group-dropdown-1"
+                                className="group1-style"
+                                size="1px"
+                                onSelect={handleBrandSelect}
+                                title={selecteddata.brand == "" ? `${selecteddata.defaultvalue} Brand` : selecteddata.brand}
+                            >
+                                {/* {datas.brand.map((data, key) => ( */}
+                                {selecteddata.allbrand.map((data, key) => (
+                                    <Dropdown.Item eventKey={data} key={key} title={data} >{data}</Dropdown.Item>
+                                ))}
+                            </DropdownButton>
 
-                            id="input-group-dropdown-1"
-                            onSelect={handleModelSelect}
-                            title={selecteddata.model == "" ? `${selecteddata.defaultvalue} Model` : selecteddata.model}
-                        >
-                            {selecteddata.allmodel.length > 0 ? selecteddata.allmodel.map((data, key) => (
+                            <DropdownButton
+                                variant="outline-secondary"
 
-                                <Dropdown.Item eventKey={data} key={key} title={data} >{data}</Dropdown.Item>
-                            )) :
-                                <Dropdown.Item   >Select the Brand </Dropdown.Item>
-                                // <div>Select the brand</div>
-                            }
-                            {/* <Dropdown.Divider />
+                                id="input-group-dropdown-1"
+                                onSelect={handleModelSelect}
+                                title={selecteddata.model == "" ? `${selecteddata.defaultvalue} Model` : selecteddata.model}
+                            >
+                                {selecteddata.allmodel.length > 0 ? selecteddata.allmodel.map((data, key) => (
+
+                                    <Dropdown.Item eventKey={data} key={key} title={data} >{data}</Dropdown.Item>
+                                )) :
+                                    <Dropdown.Item   >Select the Brand </Dropdown.Item>
+                                    // <div>Select the brand</div>
+                                }
+                                {/* <Dropdown.Divider />
                             <Dropdown.Item href="#">Separated link</Dropdown.Item> */}
-                        </DropdownButton>
+                            </DropdownButton>
 
 
-                        <DropdownButton
-                            variant="outline-secondary"
+                            <DropdownButton
+                                variant="outline-secondary"
 
-                            id="input-group-dropdown-1"
-                            onSelect={handleYearSelect}
-                            title={selecteddata.year == "" ? `${selecteddata.defaultvalue} Year` : selecteddata.year}
-                        >
-                            {selecteddata.allyear.length > 0 ? selecteddata.allyear.map((data, key) => (
+                                id="input-group-dropdown-1"
+                                onSelect={handleYearSelect}
+                                title={selecteddata.year == "" ? `${selecteddata.defaultvalue} Year` : selecteddata.year}
+                            >
+                                {selecteddata.allyear.length > 0 ? selecteddata.allyear.map((data, key) => (
 
-                                <Dropdown.Item eventKey={data} key={key} title={data} >{data}</Dropdown.Item>
-                            )) : <Dropdown.Item   >Select the Model </Dropdown.Item>}
-                        </DropdownButton>
-
-
-                        <DropdownButton
-                            variant="outline-secondary"
-
-                            id="input-group-dropdown-1"
-                            onSelect={handleCCSelect}
-                            title={selecteddata.cc == "" ? `${selecteddata.defaultvalue} CC` : selecteddata.cc}
-
-                        >
-                            {selecteddata.allcc.length > 0 ? selecteddata.allcc.map((data, key) => (
-
-                                <Dropdown.Item eventKey={data} key={key} title={data} >{data}</Dropdown.Item>
-                            )) : <Dropdown.Item   >Select the Year </Dropdown.Item>}
-                        </DropdownButton>
-                        <FloatingLabel
-                            controlId="formBasicNumber"
-                            label="Kms"
-                        // className="mb-3"
-                        >
-                            <FormControl
-                                className="form-input-stype input-stype text-input-style"
-                                placeholder="Kms"
-                                aria-label="Kms"
-                                aria-describedby="basic-addon2"
-
-                                type="number"
-                                // keyboardType="phone-pad"
-                                onChange={(val) => textKmsChange(val)}
-                            />
+                                    <Dropdown.Item eventKey={data} key={key} title={data} >{data}</Dropdown.Item>
+                                )) : <Dropdown.Item   >Select the Model </Dropdown.Item>}
+                            </DropdownButton>
 
 
-                        </FloatingLabel>
-                        <FloatingLabel
-                            controlId="floatingInput"
-                            label="Location"
-                        // className="mb-3"
-                        >
-                            <FormControl
-                                className="form-input-stype input-stype "
-                                placeholder="Location "
-                                aria-label="Location"
-                                aria-describedby="basic-addon2"
-                                // onChange={(val)=>textLocationChange(val)}  
-                                onChange={(val) => textLocationChange(val)}
-                            />
-                        </FloatingLabel>
-                        <Button
-                            placeholder='Submit'
-                            className="button-input-stype gap-2 d-grid "
-                            variant="secondary"
-                            size="lg"
-                            onClick={handleButton}
-                        >
-                            Submit
-                        </Button>
-                    </InputGroup>
-                </Card>
+                            <DropdownButton
+                                variant="outline-secondary"
+
+                                id="input-group-dropdown-1"
+                                onSelect={handleCCSelect}
+                                title={selecteddata.cc == "" ? `${selecteddata.defaultvalue} CC` : selecteddata.cc}
+
+                            >
+                                {selecteddata.allcc.length > 0 ? selecteddata.allcc.map((data, key) => (
+
+                                    <Dropdown.Item eventKey={data} key={key} title={data} >{data}</Dropdown.Item>
+                                )) : <Dropdown.Item   >Select the Year </Dropdown.Item>}
+                            </DropdownButton>
+                            <FloatingLabel
+                                controlId="formBasicNumber"
+                                label="Kms"
+                            // className="mb-3"
+                            >
+                                <FormControl
+                                    className="form-input-stype input-stype text-input-style"
+                                    placeholder="Kms"
+                                    aria-label="Kms"
+                                    aria-describedby="basic-addon2"
+
+                                    type="number"
+                                    // keyboardType="phone-pad"
+                                    onChange={(val) => textKmsChange(val)}
+                                />
+
+
+                            </FloatingLabel>
+                            <FloatingLabel
+                                controlId="floatingInput"
+                                label="Location"
+                            // className="mb-3"
+                            >
+                                <FormControl
+                                    className="form-input-stype input-stype "
+                                    placeholder="Location "
+                                    aria-label="Location"
+                                    aria-describedby="basic-addon2"
+                                    // onChange={(val)=>textLocationChange(val)}  
+                                    onChange={(val) => textLocationChange(val)}
+                                />
+                            </FloatingLabel>
+                            <Button
+                                placeholder='Submit'
+                                className="button-input-stype gap-2 d-grid "
+                                variant="secondary"
+                                size="lg"
+                                onClick={handleButton}
+                            >
+                                Submit
+                            </Button>
+                        </InputGroup>
+                    </Card>
                 </animate.Fade>
             </div>
             <div>
-            {selecteddata.isdatasubmited ?
-                
+                {selecteddata.isdatasubmited ?
+
                     <animate.Flip top delay={1100}>
-                    <Card className="card-styles ">
-                       
+                        <Card className="card-styles ">
+
                             {/* <div>Data submited</div> */}
                             {/* <div>{selecteddata.brand}</div>
                             <div>{selecteddata.model}</div>
@@ -448,31 +455,43 @@ function BikeFastSearch(props) {
                             /> */}
                             <Form.Label className='inner-contant-style form-styles'>Bike Condition</Form.Label>
                             {/* <div className="form-input-stype input-stype control-text-style"> */}
-                            
+
                             <Form.Range
                                 className="form-input-stype input-stype "
                                 onChange={(val) => handleRange(val)}
-                            
+
                                 min="0" max="2"
                                 value={selecteddata.range}
-                                // size={"100px"}
-                           / >
-                               
-                               <div className="form-input-stype input-stype control-text-style"> 
-                               <div >Fair </div>
-                               <div className="range-text1">  Good </div>
-                               <div  > Excellent</div>
-                               </div>
-                               {/* </div>   */}
-                               {/* <div> {selecteddata.rangetext}</div> */}
-                               <Card className="card-styles inner-contant-style ">
+                            // size={"100px"}
+                            />
+
+                            <div className="form-input-stype input-stype control-text-style">
+                                <div >Fair </div>
+                                <div className="range-text1">  Good </div>
+                                <div  > Excellent</div>
+                            </div>
+                            {/* </div>   */}
+                            {/* <div> {selecteddata.rangetext}</div> */}
+                            <div className='inner-contant-style form-styles'> Insurance </div>
+                           
+                            <Form className='inner-contant-style form-styles form-spacing'>
+                            
+                                <Form.Check
+                                    type="switch"
+                                    id="custom-switch"
+                                    label="Yes"
+                                   onChange={(val) => handleInsurance(val)}
+                                />
+                            </Form>
+                            
+                            <Card className="card-styles inner-contant-style ">
                                 <div>Rs: {selecteddata.cost}</div>
-                                </Card>
-                    </Card>
+                            </Card>
+                        </Card>
                     </animate.Flip>
-                
-                : null}
-                </div>
+
+                    : null}
+            </div>
 
         </>
     );
