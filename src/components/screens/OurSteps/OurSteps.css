@@ -1,0 +1,43 @@
+.our-steps{
+    width: 100%;
+    max-width: 500px;
+    height: width/ 2px; 
+    align-items: center;
+    justify-content: center;
+    /* margin-top: 10px; */
+}
+.photo-steps{
+    /* display: flex; */
+    margin: 2%;
+    padding: 3%;
+    align-items: center;
+    justify-content: center;
+   align-self: stretch;
+   align-content: space-between
+}
+.Sell-bike-header{
+    margin-bottom: 20px;
+}
+@media screen and (max-width: 1670px) {
+    .photo-steps{
+        display: flex;
+       
+    }
+    .our-steps{
+        max-width: 450px;      
+    }
+}
+@media screen and (max-width: 1320px) {
+    .photo-steps{
+        display: block;
+       
+    }
+    .our-steps{
+        max-width: 450px;      
+    }
+}
+@media screen and (max-width: 920px) {
+    .our-steps{
+        max-width: 450px;      
+    }
+}

@@ -1,0 +1,17 @@
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+}
+.input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    margin-left: 0px;
+    border-radius: 1px;
+    border-radius: 1px;
+    
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+   
+}
