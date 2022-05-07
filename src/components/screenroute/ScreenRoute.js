@@ -5,7 +5,9 @@ import Navbar from './Navbar';
 import { Routes, Route, Link,MemoryRouter } from "react-router-dom";
 import BikeHome from '../screens/BikeHome/BikeHome';
 import Footer from '../screens/Footer/Footer';
-
+import * as Datas from '../../Assests/Data/Assest';
+// import Goup from '../../Goup/Goup';
+import FloatingWhatsApp from 'react-floating-whatsapp';
 const ScreenRoute = (props) =>{
     return(
         <>    
@@ -14,6 +16,11 @@ const ScreenRoute = (props) =>{
         <Route path="/" element={<Home />} />
         <Route path="/Bikes" element={<BikeHome />} />
       </Routes>
+      <FloatingWhatsApp phoneNumber={Datas.whatsapp[0].phno}
+                    className="Floating-style"
+                    accountName={Datas.whatsapp[0].accountName}
+                    // avatar={Datas.whatsapp[0].Url}
+                    allowClickAway />
       <Footer/>
         {/* <Home/> */}
        

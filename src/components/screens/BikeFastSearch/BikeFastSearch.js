@@ -40,12 +40,17 @@ function BikeFastSearch(props) {
         message: null,
         isdatasubmited: false,
         cost: "",
+        orgcost:'',
         bikecondition: "",
         allRange: ["Fair", "Good", "Excellent"],
-        range: 0,
+        range: 2,
         rangetext: '',
-        insurance:false,
+        insurance:0,
+        tempcost: 0,
+        phno: 0,
+        count: 0,
     };
+    let tempcost=0;
     const [selecteddata, setSelecteddata] = React.useState(initialdata);
 
     const [allmodeldetailsdata, setAllmodeldetailsdata] = React.useState('');
@@ -161,9 +166,33 @@ function BikeFastSearch(props) {
         }
 
     }
+    
 
+    const textphnoChange = (val) => {
+        console.log(val.target.value);
+        if (val.target.value.length !== 0) {
+           
+            setSelecteddata({
+                ...selecteddata,
+                phno: val.target.value,
+                
+            });
+        }
 
-
+    }
+    function phonenumber(inputtxt)
+{
+  var phoneno = /^\d{10}$/;
+  if(inputtxt.match(phoneno))
+        {
+      return true;
+        }
+      else
+        {
+        alert("Invalid Number");
+        return false;
+        }
+}
     useEffect(() => {
         retrivedatas();
     }, [])
@@ -257,25 +286,121 @@ function BikeFastSearch(props) {
     const handleRange = (val) => {
         console.log(val.target.value);
 
-        let rangetex = "";
-        // allRange: ["Fair", "Good", "Excellent"],
-        if (val.target.value == 0) {
-            rangetex = "Fair";
-        }
-        if (val.target.value == 1) {
-            rangetex = "Good";
-        }
-        if (val.target.value == 2) {
-            rangetex = "Excellent";
-        }
-        console.log(rangetex);
-        setSelecteddata({
-            ...selecteddata,
-            rangetext: rangetex,
-            range: val.target.value
-
-        });
+        handleInsuranceRange(0,val);
     }
+    const handleInsuranceRange = (opt,val) => {
+        let tempfinalcost= selecteddata.orgcost;
+        let count= selecteddata.count; 
+        let tempco=0;
+        if(opt===0 )
+        {
+            let beforanval = selecteddata.range;
+            let rangetex = "";
+            let tempins= selecteddata.insurance;
+            if (val.target.value == 0 ) {
+                rangetex = "Fair";
+                tempcost = tempfinalcost*0.90; 
+                 count = 2;  
+                 tempco=2;
+                // if(beforanval == 1)
+                // {
+                //     count =  count+1;   
+                // }
+
+                // else
+                // {
+                //     count = 2;   
+                // }
+                      
+            }
+            if (val.target.value == 1 ) {
+                rangetex = "Good";
+                tempcost = tempfinalcost*0.95;
+                tempco=1;
+                // if(beforanval == 0)
+                // {
+                //     count =  count-1;   
+                // }
+                // if(beforanval == 2)
+                // {
+                //     count =  count+1;   
+                // }
+
+            }
+            if (val.target.value == 2) 
+            {
+                rangetex = "Excellent";
+                tempcost = selecteddata.orgcost;
+                tempco=0;
+            }
+            if(!tempins)
+            {
+                
+                tempco=tempco+1;
+            }
+           
+            if(selecteddata.kms > 50000)
+                {                 
+                    tempco= tempco +2;                  
+                }
+            tempcost =selecteddata.orgcost*((100- (tempco*5))*0.01);  
+            console.log(rangetex+ 'tempcost '+tempcost+tempco);
+            setSelecteddata({
+                ...selecteddata,
+                rangetext: rangetex,
+                range: val.target.value,
+                cost:tempcost,
+                count:tempco
+
+            });
+
+        }
+        if(opt===1 )
+        {
+            let temprange = selecteddata.range;
+            console.log(temprange + ' temprange');
+            let tempco=0;
+            if(!val.target.checked)
+            {
+                tempcost =selecteddata.orgcost*0.95;
+                count =  count+1;
+                tempco=1;
+            }
+            else
+            {
+                tempcost =selecteddata.orgcost;
+                count =  count-1;
+            }
+            if(temprange == 0)
+            {
+                tempcost = tempcost*0.90;
+                count =  count+2;
+                tempco=tempco+2;
+            }
+            if(temprange == 1)
+            {
+                tempcost =tempcost*0.95;
+                count =  count+1;
+                tempco=tempco+1;
+            }
+            if(selecteddata.kms > 50000)
+                {                 
+                    tempco= tempco +2;                  
+                }
+            tempcost =selecteddata.orgcost*((100- (tempco*5))*0.01); 
+            console.log(temprange+ 'tempcost '+tempcost+tempco+selecteddata.orgcost);
+            setSelecteddata({
+                ...selecteddata,
+                insurance: val.target.checked,
+                cost:tempcost,
+                count:tempco
+    
+            });
+
+        }
+
+    }
+   
     const handleButton = () => {
         console.log("handleButton");
         console.log(selecteddata);
@@ -285,7 +410,8 @@ function BikeFastSearch(props) {
             alert("Please complete the form");
             return false;
         }
-        let bikecost = '';
+        let bikecost = 0; 
+        let bikecost1 = 0,count= 0; 
         let bikeModel = allmodeldetailsdata.map((props) => {
             console.log(props);
             if (selecteddata.brand === props.BikeBrand && selecteddata.year === props.BikeYear
@@ -293,13 +419,31 @@ function BikeFastSearch(props) {
                 console.log("propsprops.year to cc");
                 // return props.BikeModel
                 console.log("props.model", props.BikeOrgCost);
-                bikecost = props.BikeOrgCost;
+                bikecost = props.BikeOrgCost ;
+                if(selecteddata.kms > 50000)
+                {
+                    // bikecost = props.BikeOrgCost*0.90 ;
+                    count= count +2;
+                    // alert('asd');
+                }
+                else
+                {
+                    // bikecost = props.BikeOrgCost ;    
+                    // alert('asd1')               
+                }
+                // bikecost1 =bikecost*0.90;   // insurance    
+                count= count +1;
+                bikecost1 =bikecost*((100- (count*5))*0.01);  
             }
         });
+
         setSelecteddata({
             ...selecteddata,
             isdatasubmited: true,
-            cost: bikecost
+            cost: bikecost1,
+            orgcost: bikecost,
+            count:count,
+            range:2,
         });
 
     }
@@ -307,12 +451,16 @@ function BikeFastSearch(props) {
     const handleInsurance = (val) => {
    
         console.log(val.target.checked);
-        setSelecteddata({
-            ...selecteddata,
-            insurance: val.target.checked
+        
+        handleInsuranceRange(1,val);
 
-        });
     }
+    const handleSubmit = () => {
+        console.log('submit');
+        phonenumber(selecteddata.phno);
+    }
+
+    
     return (
         <>
 
@@ -334,7 +482,7 @@ function BikeFastSearch(props) {
                                 className="group1-style"
                                 size="1px"
                                 onSelect={handleBrandSelect}
-                                title={selecteddata.brand == "" ? `${selecteddata.defaultvalue} Brand` : selecteddata.brand}
+                                title={selecteddata.brand === "" ? `${selecteddata.defaultvalue} Brand` : selecteddata.brand}
                             >
                                 {/* {datas.brand.map((data, key) => ( */}
                                 {selecteddata.allbrand.map((data, key) => (
@@ -347,7 +495,7 @@ function BikeFastSearch(props) {
 
                                 id="input-group-dropdown-1"
                                 onSelect={handleModelSelect}
-                                title={selecteddata.model == "" ? `${selecteddata.defaultvalue} Model` : selecteddata.model}
+                                title={selecteddata.model === "" ? `${selecteddata.defaultvalue} Model` : selecteddata.model}
                             >
                                 {selecteddata.allmodel.length > 0 ? selecteddata.allmodel.map((data, key) => (
 
@@ -427,7 +575,7 @@ function BikeFastSearch(props) {
                                 size="lg"
                                 onClick={handleButton}
                             >
-                                Submit
+                                Check
                             </Button>
                         </InputGroup>
                     </Card>
@@ -453,7 +601,7 @@ function BikeFastSearch(props) {
                             // onChange={(val)=>textLocationChange(val)}  
                             // onChange={(val) => textLocationChange(val)}
                             /> */}
-                            <Form.Label className='inner-contant-style form-styles'>Bike Condition</Form.Label>
+                            <Form.Label className='inner-contant-style form-styles card-title-styles'>Bike Condition</Form.Label>
                             {/* <div className="form-input-stype input-stype control-text-style"> */}
 
                             <Form.Range
@@ -472,21 +620,53 @@ function BikeFastSearch(props) {
                             </div>
                             {/* </div>   */}
                             {/* <div> {selecteddata.rangetext}</div> */}
-                            <div className='inner-contant-style form-styles'> Insurance </div>
+                            <div className='inner-contant-style form-styles card-title-styles'> Live Insurance </div>
                            
                             <Form className='inner-contant-style form-styles form-spacing'>
                             
                                 <Form.Check
                                     type="switch"
                                     id="custom-switch"
-                                    label="Yes"
+                                    label="Yes"                                  
+                                    value={selecteddata.insurance}
+                                    isValid='true'
+                                    feedbackTooltip='true'
                                    onChange={(val) => handleInsurance(val)}
                                 />
+                               
                             </Form>
                             
-                            <Card className="card-styles inner-contant-style ">
-                                <div>Rs: {selecteddata.cost}</div>
+                            <Card className="card-styles inner-contant-style cost-style ">
+                            <div className='inner-contant-style form-styles card-title-styles ' > Cost </div>
+                                <div className='inner-contant-style form-styles card-title-styles '>Rs: {selecteddata.cost}</div>
                             </Card>
+
+                            <FloatingLabel
+                                controlId="formBasicNumber"
+                                label="Phone Number"
+                            >
+                                <FormControl
+                                    // className="form-input-stype input-stype"
+                                    placeholder="Phone Number"
+                                    aria-label="Phone Number"
+                                    aria-describedby="basic-addon2"
+                                    type="number"
+                                    onChange={(val) => textphnoChange(val)}
+                                />
+
+
+                            </FloatingLabel>
+                            <div className='inner-contant-style form-styles card-title-styles'> 
+                            <Button
+                                placeholder='Submit'
+                                className="button-input-stype gap-2 d-grid card-styles inner-contant-style "
+                                variant="success"
+                                size="lg"
+                                onClick={handleSubmit}
+                            >
+                                Submit
+                            </Button>
+                            </div>
                         </Card>
                     </animate.Flip>
 

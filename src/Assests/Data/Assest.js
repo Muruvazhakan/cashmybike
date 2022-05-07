@@ -18,3 +18,9 @@ export const Youtube_link='//www.youtube.com/channel/UCL5homLXX6x8eXzO4_M2xgw';
 
 export const Insta_link="//www.instagram.com/ezhil_elit/";
 
+export const whatsapp=[
+    {accountName:'Cash My Bike',
+    // Url:`${Img_Server}/Main-Img/EElogoL.png`,
+    phno:"9677268838"}
+  ]
+
