@@ -2083,14 +2083,14 @@ var itemProps={
 'Royal Enfield_Thunderbird_Thunderbird 500':{y:2012,c:499},
 'Yamaha_Alpha':{y:2014},
 'Yamaha_Alpha_Alpha':{y:2014,c:113},
-'Yamaha_Enticer':{e:2004,c:123.7},
+'Yamaha_Enticer':{e:2004,c:123.7}, // not there
 'Yamaha_YZF R15':{y:2008},
 'Yamaha_YZF R15_YZF R15':{y:2008,c:149.8},
 'Yamaha_YZF R15_YZF R15 S':{y:2015,c:149},
 'Yamaha_YZF R15_YZF R15 V2':{y:2011,c:149.8},
 'Yamaha_YZF R15_YZF R15 V3':{y:2011,c:155},
 'Yamaha_YZF R3':{y:2014,c:321},
-'Yamaha_RD 350':{c:347},
+'Yamaha_RD 350':{c:347}, // not there
 'Yamaha_RX_RX 100':{y:1984,e:1997,c:98},
 'Yamaha_RX_RX 135':{y:1990,e:2006,c:132},
 'Yamaha_RX_RXG':{c:132},
@@ -2098,7 +2098,7 @@ var itemProps={
 'Yamaha_Ray':{y:2012},
 'Yamaha_Ray_Ray':{y:2012,c:113},
 'Yamaha_Ray_Ray Z':{y:2013,c:113},
-'Yamaha_Ray_Cygnus Ray ZR':{y:2013,c:113},
+'Yamaha_Ray_Cygnus Ray ZR':{y:2013,c:113}, // upto this
 'Yamaha_Alba':{c:106},
 'Yamaha_Crux_Crux':{c:106},
 'Yamaha_Crux_Crux R':{c:105.6},

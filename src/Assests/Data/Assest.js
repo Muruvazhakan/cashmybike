@@ -21,6 +21,6 @@ export const Insta_link="//www.instagram.com/ezhil_elit/";
 export const whatsapp=[
     {accountName:'Cash My Bike',
     // Url:`${Img_Server}/Main-Img/EElogoL.png`,
-    phno:"9677268838"}
+    phno:"919677268838"}
   ]
-
+  export const Form_Url =`${serverUrl}Submit/Client_Details.php`;

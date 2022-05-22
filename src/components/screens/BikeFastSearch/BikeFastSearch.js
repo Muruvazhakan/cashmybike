@@ -3,10 +3,13 @@ import { DropdownButton, Dropdown, InputGroup, FormControl, Row, Button, Floatin
 import './BikeFastSearch.css';
 import Card from '../../modules/Card/Card';
 import Form from 'react-bootstrap/Form'
-
+import ReactWhatsapp from 'react-whatsapp';
 import * as Datas from '../../../Assests/Data/Assest';
 import OurSteps from '../OurSteps/OurSteps';
 import * as animate from 'react-reveal/';
+import { ImWhatsapp } from 'react-icons/im';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function BikeFastSearch(props) {
 
 
@@ -40,17 +43,19 @@ function BikeFastSearch(props) {
         message: null,
         isdatasubmited: false,
         cost: "",
-        orgcost:'',
+        orgcost: '',
         bikecondition: "",
         allRange: ["Fair", "Good", "Excellent"],
         range: 2,
-        rangetext: '',
-        insurance:0,
+        rangetext: 'Excellent',
+        insurance: 0,
         tempcost: 0,
         phno: 0,
+        username:'',
         count: 0,
+        showsubmit: true,
     };
-    let tempcost=0;
+    let tempcost = 0;
     const [selecteddata, setSelecteddata] = React.useState(initialdata);
 
     const [allmodeldetailsdata, setAllmodeldetailsdata] = React.useState('');
@@ -149,7 +154,8 @@ function BikeFastSearch(props) {
             setSelecteddata({
                 ...selecteddata,
                 kms: val.target.value,
-                isdatasubmited: false
+                isdatasubmited: false,
+                showsubmit: true
             });
         }
 
@@ -161,42 +167,56 @@ function BikeFastSearch(props) {
             setSelecteddata({
                 ...selecteddata,
                 location: val.target.value,
-                isdatasubmited: false
+                isdatasubmited: false,
+                showsubmit: true
             });
         }
 
     }
-    
+
 
     const textphnoChange = (val) => {
         console.log(val.target.value);
         if (val.target.value.length !== 0) {
-           
+
             setSelecteddata({
                 ...selecteddata,
                 phno: val.target.value,
-                
+                showsubmit: true
+
             });
         }
 
     }
-    function phonenumber(inputtxt)
-{
-  var phoneno = /^\d{10}$/;
-  if(inputtxt.match(phoneno))
-        {
-      return true;
+    const  phonenumber =(inputtxt) => {
+        var phoneno = /^\d{10}$/;
+        // alert(" Number"+inputtxt );
+        if (inputtxt.match(phoneno) && inputtxt.length == 10) {
+            // alert(" Number"+inputtxt );
+            return true;
         }
-      else
-        {
-        alert("Invalid Number");
-        return false;
+        else {
+            // alert("Invalid Number");
+            notify('Phone Number','error');
+            return false;
         }
-}
+    }
+    const  name =(inputtxt) => {
+        // alert(" name"+inputtxt.length );
+        
+        if (inputtxt.length > 1) {          
+            return true;
+        }
+        else {
+            // alert("Invalid Number");
+            notify('Name','error');
+            return false;
+        }
+    }
     useEffect(() => {
         retrivedatas();
     }, [])
-    function onlyUnique(value, index, self) {
+    const onlyUnique =(value, index, self) =>{
         return self.indexOf(value) === index;
     }
     const retrivedatas = () => {
@@ -286,22 +306,21 @@ function BikeFastSearch(props) {
     const handleRange = (val) => {
         console.log(val.target.value);
 
-        handleInsuranceRange(0,val);
+        handleInsuranceRange(0, val);
     }
-    const handleInsuranceRange = (opt,val) => {
-        let tempfinalcost= selecteddata.orgcost;
-        let count= selecteddata.count; 
-        let tempco=0;
-        if(opt===0 )
-        {
+    const handleInsuranceRange = (opt, val) => {
+        let tempfinalcost = selecteddata.orgcost;
+        let count = selecteddata.count;
+        let tempco = 0;
+        if (opt === 0) {
             let beforanval = selecteddata.range;
             let rangetex = "";
-            let tempins= selecteddata.insurance;
-            if (val.target.value == 0 ) {
+            let tempins = selecteddata.insurance;
+            if (val.target.value == 0) {
                 rangetex = "Fair";
-                tempcost = tempfinalcost*0.90; 
-                 count = 2;  
-                 tempco=2;
+                tempcost = tempfinalcost * 0.90;
+                count = 2;
+                tempco = 2;
                 // if(beforanval == 1)
                 // {
                 //     count =  count+1;   
@@ -311,12 +330,12 @@ function BikeFastSearch(props) {
                 // {
                 //     count = 2;   
                 // }
-                      
+
             }
-            if (val.target.value == 1 ) {
+            if (val.target.value == 1) {
                 rangetex = "Good";
-                tempcost = tempfinalcost*0.95;
-                tempco=1;
+                tempcost = tempfinalcost * 0.95;
+                tempco = 1;
                 // if(beforanval == 0)
                 // {
                 //     count =  count-1;   
@@ -327,80 +346,72 @@ function BikeFastSearch(props) {
                 // }
 
             }
-            if (val.target.value == 2) 
-            {
+            if (val.target.value == 2) {
                 rangetex = "Excellent";
                 tempcost = selecteddata.orgcost;
-                tempco=0;
+                tempco = 0;
             }
-            if(!tempins)
-            {
-                
-                tempco=tempco+1;
+            if (!tempins) {
+
+                tempco = tempco + 1;
             }
-           
-            if(selecteddata.kms > 50000)
-                {                 
-                    tempco= tempco +2;                  
-                }
-            tempcost =selecteddata.orgcost*((100- (tempco*5))*0.01);  
-            console.log(rangetex+ 'tempcost '+tempcost+tempco);
+
+            if (selecteddata.kms > 50000) {
+                tempco = tempco + 2;
+            }
+            tempcost = selecteddata.orgcost * ((100 - (tempco * 5)) * 0.01);
+            console.log(rangetex + 'tempcost ' + tempcost + tempco);
             setSelecteddata({
                 ...selecteddata,
                 rangetext: rangetex,
                 range: val.target.value,
-                cost:tempcost,
-                count:tempco
-
+                cost: tempcost,
+                count: tempco,
+                showsubmit: true
             });
 
         }
-        if(opt===1 )
-        {
+        if (opt === 1) {
             let temprange = selecteddata.range;
-            console.log(temprange + ' temprange');
-            let tempco=0;
-            if(!val.target.checked)
-            {
-                tempcost =selecteddata.orgcost*0.95;
-                count =  count+1;
-                tempco=1;
+            console.log(temprange + ' temprange'+val.target.checked );
+            let tempco = 0;
+            if (!val.target.checked) {
+                tempcost = selecteddata.orgcost * 0.95;
+                count = count + 1;
+                tempco = 1;
             }
-            else
-            {
-                tempcost =selecteddata.orgcost;
-                count =  count-1;
+            else {
+                tempcost = selecteddata.orgcost;
+                count = count - 1;
             }
-            if(temprange == 0)
-            {
-                tempcost = tempcost*0.90;
-                count =  count+2;
-                tempco=tempco+2;
+            if (temprange == 0) {
+                tempcost = tempcost * 0.90;
+                count = count + 2;
+                tempco = tempco + 2;
             }
-            if(temprange == 1)
-            {
-                tempcost =tempcost*0.95;
-                count =  count+1;
-                tempco=tempco+1;
+            if (temprange == 1) {
+                tempcost = tempcost * 0.95;
+                count = count + 1;
+                tempco = tempco + 1;
             }
-            if(selecteddata.kms > 50000)
-                {                 
-                    tempco= tempco +2;                  
-                }
-            tempcost =selecteddata.orgcost*((100- (tempco*5))*0.01); 
-            console.log(temprange+ 'tempcost '+tempcost+tempco+selecteddata.orgcost);
+            if (selecteddata.kms > 50000) {
+                tempco = tempco + 2;
+            }
+            tempcost = selecteddata.orgcost * ((100 - (tempco * 5)) * 0.01);
+            
             setSelecteddata({
                 ...selecteddata,
                 insurance: val.target.checked,
-                cost:tempcost,
-                count:tempco
-    
+                cost: tempcost,
+                count: tempco,
+                showsubmit: true
+                
             });
-
+            console.log(temprange+ 'tempcost ' + tempcost + tempco + selecteddata.orgcost);
         }
 
     }
-   
+
     const handleButton = () => {
         console.log("handleButton");
         console.log(selecteddata);
@@ -410,8 +421,8 @@ function BikeFastSearch(props) {
             alert("Please complete the form");
             return false;
         }
-        let bikecost = 0; 
-        let bikecost1 = 0,count= 0; 
+        let bikecost = 0;
+        let bikecost1 = 0, count = 0;
         let bikeModel = allmodeldetailsdata.map((props) => {
             console.log(props);
             if (selecteddata.brand === props.BikeBrand && selecteddata.year === props.BikeYear
@@ -419,21 +430,19 @@ function BikeFastSearch(props) {
                 console.log("propsprops.year to cc");
                 // return props.BikeModel
                 console.log("props.model", props.BikeOrgCost);
-                bikecost = props.BikeOrgCost ;
-                if(selecteddata.kms > 50000)
-                {
+                bikecost = props.BikeOrgCost;
+                if (selecteddata.kms > 50000) {
                     // bikecost = props.BikeOrgCost*0.90 ;
-                    count= count +2;
+                    count = count + 2;
                     // alert('asd');
                 }
-                else
-                {
+                else {
                     // bikecost = props.BikeOrgCost ;    
                     // alert('asd1')               
                 }
                 // bikecost1 =bikecost*0.90;   // insurance    
-                count= count +1;
-                bikecost1 =bikecost*((100- (count*5))*0.01);  
+                count = count + 1;
+                bikecost1 = bikecost * ((100 - (count * 5)) * 0.01);
             }
         });
 
@@ -442,25 +451,144 @@ function BikeFastSearch(props) {
             isdatasubmited: true,
             cost: bikecost1,
             orgcost: bikecost,
-            count:count,
-            range:2,
+            count: count,
+            range: 2,
+            showsubmit: true
         });
 
     }
-    
+
     const handleInsurance = (val) => {
-   
+
         console.log(val.target.checked);
-        
-        handleInsuranceRange(1,val);
+
+        handleInsuranceRange(1, val);
 
     }
+
+    const nameHandler = (val) => {
+        console.log(val.target.value);
+        if (val.target.value.length !== 0) {
+            setSelecteddata({
+                ...selecteddata,
+                username: val.target.value,
+                showsubmit: true
+            });
+        }
+
+    }
+
+
     const handleSubmit = () => {
         console.log('submit');
-        phonenumber(selecteddata.phno);
+       // clietRequestHandler();
+        let checkname = name(selecteddata.username);
+        let checknum = phonenumber(selecteddata.phno);
+       if(checkname && checknum) 
+       {
+       
+        clietRequestHandler();
+       }
     }
+    // 	Bike_Brand	Bike_Model	Bike_Year	Bike_CC	Bike_Cost	Insurance	Km	Location
 
+    const clietRequestHandler = ()=>{
+        console.log("clietRequestHandler");
+        fetch(Datas.Form_Url, {
+          method: 'post',
+          header: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            // we will pass our input data to server
+            mobile:selecteddata.phno,
+            name: selecteddata.username,
+            brand: selecteddata.brand,  
+            model:selecteddata.model,
+            yr:selecteddata.year, 
+            cc:selecteddata.cc, 
+            km:selecteddata.kms,     
+            cost:selecteddata.cost, 
+            location:selecteddata.location,     
+            insurance:selecteddata.insurance ==  0? 'No ': 'Yes',   
+            condition:selecteddata.rangetext,     
+          })
     
+        })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            console.log(" responseJson");
+            console.log(responseJson);
+            //ToastAndroid.show(responseJson,ToastAndroid.LONG);
+    
+            if (responseJson !== "Added") 
+            {
+              console.log(" not Added");
+              
+            }
+            else
+            {
+              console.log("Added");
+              notify('Success','succ');
+              setSelecteddata({
+                ...selecteddata,
+                showsubmit: false,
+                
+            });
+              // alert("Thanks for your Interest, We will contact you As Soon As Possible.");
+            //   setState({
+            //     ...state,
+            //     enteredUsername: '',
+            //     enteredNumber: '',
+            //     enteredEmailId: '',
+            //     enteredDetails: '',
+            //     errordetail: '',
+            //     enteredDate:'',
+               
+            //   })
+            }
+            // notify('Success','succ');
+
+          })  
+          .catch((error) => {
+            console.error(error);
+          });
+          
+    
+      }
+    
+      const notify = (errors,types) =>
+      { 
+        if(types==="error")
+        {
+          toast.error("Invalid "+errors,{    
+            position: "top-center",
+            // autoClose: 5000,
+            // hideProgressBar: false,
+            // closeOnClick: true,
+            pauseOnHover: true,
+            // draggable: true,
+            // progress: undefined,        
+        })
+    
+        }
+        if(types==="succ")
+        {
+          // toast.success("Thanks for your Interest, We will contact you As Soon As Possible.",{    
+            toast.success("Submited",{    
+            position: "top-center",
+            // autoClose: 5000,
+            // hideProgressBar: false,
+            // closeOnClick: true,
+            pauseOnHover: true,
+            // draggable: true,
+            // progress: undefined,        
+        })
+    
+        }
+        
+    };
     return (
         <>
 
@@ -476,8 +604,11 @@ function BikeFastSearch(props) {
                         <InputGroup >
 
                             <DropdownButton
-                                variant="outline-secondary"
+                                 drop={selecteddata.isdatasubmited ? 'up' : 'down'}           
+                                 variant="outline-secondary"
                                 //title="Brand"
+                                style={{ maxHeight: "28px" }}
+                                // id="dropdown-size-small"
                                 id="input-group-dropdown-1"
                                 className="group1-style"
                                 size="1px"
@@ -492,7 +623,7 @@ function BikeFastSearch(props) {
 
                             <DropdownButton
                                 variant="outline-secondary"
-
+                                drop={selecteddata.isdatasubmited ? 'up' : 'down'}  
                                 id="input-group-dropdown-1"
                                 onSelect={handleModelSelect}
                                 title={selecteddata.model === "" ? `${selecteddata.defaultvalue} Model` : selecteddata.model}
@@ -511,7 +642,7 @@ function BikeFastSearch(props) {
 
                             <DropdownButton
                                 variant="outline-secondary"
-
+                                drop={selecteddata.isdatasubmited ? 'up' : 'down'}  
                                 id="input-group-dropdown-1"
                                 onSelect={handleYearSelect}
                                 title={selecteddata.year == "" ? `${selecteddata.defaultvalue} Year` : selecteddata.year}
@@ -525,7 +656,7 @@ function BikeFastSearch(props) {
 
                             <DropdownButton
                                 variant="outline-secondary"
-
+                                drop={selecteddata.isdatasubmited ? 'up' : 'down'}  
                                 id="input-group-dropdown-1"
                                 onSelect={handleCCSelect}
                                 title={selecteddata.cc == "" ? `${selecteddata.defaultvalue} CC` : selecteddata.cc}
@@ -621,25 +752,40 @@ function BikeFastSearch(props) {
                             {/* </div>   */}
                             {/* <div> {selecteddata.rangetext}</div> */}
                             <div className='inner-contant-style form-styles card-title-styles'> Live Insurance </div>
-                           
+
                             <Form className='inner-contant-style form-styles form-spacing'>
-                            
+
                                 <Form.Check
                                     type="switch"
                                     id="custom-switch"
-                                    label="Yes"                                  
+                                    label="Yes"
                                     value={selecteddata.insurance}
                                     isValid='true'
                                     feedbackTooltip='true'
-                                   onChange={(val) => handleInsurance(val)}
+                                    onChange={(val) => handleInsurance(val)}
                                 />
-                               
+
                             </Form>
-                            
+
                             <Card className="card-styles inner-contant-style cost-style ">
-                            <div className='inner-contant-style form-styles card-title-styles ' > Cost </div>
-                                <div className='inner-contant-style form-styles card-title-styles '>Rs: {selecteddata.cost}</div>
+                                <div className='inner-contant-style form-styles card-title-styles ' > Cost </div>
+                                <div className='inner-contant-style form-styles card-title-styles '>Rs: {selecteddata.cost.toFixed(2)}</div>
                             </Card>
+                            <Card className="card-styles inner-contant-style cost-style ">
+                            <FloatingLabel
+                                controlId="floatingInput"
+                                label="Your Name"
+                          
+                            >
+                                <FormControl
+                                    // className="form-input-stype input-stype "
+                                    placeholder="Name "
+                                    aria-label="Name"
+                                    aria-describedby="basic-addon2"
+                                    // onChange={(val)=>textLocationChange(val)}  
+                                    onChange={(val) => nameHandler(val)}
+                                />
+                            </FloatingLabel>
 
                             <FloatingLabel
                                 controlId="formBasicNumber"
@@ -656,23 +802,39 @@ function BikeFastSearch(props) {
 
 
                             </FloatingLabel>
-                            <div className='inner-contant-style form-styles card-title-styles'> 
-                            <Button
-                                placeholder='Submit'
-                                className="button-input-stype gap-2 d-grid card-styles inner-contant-style "
-                                variant="success"
-                                size="lg"
-                                onClick={handleSubmit}
-                            >
-                                Submit
-                            </Button>
+                            </Card>
+                            <div className='inner-contant-style form-styles card-title-styles'>
+                                { selecteddata.showsubmit ? 
+                                <Button
+                                    placeholder='Submit'
+                                    className="button-input-stype gap-2 d-grid inner-contant-style "
+                                    variant="success"
+                                    size="lg"
+                                    onClick={handleSubmit}
+                                >
+                                    Submit
+                                </Button>
+                                : null }
+
+                                <ReactWhatsapp
+                                    number={Datas.whatsapp[0].phno}
+                                    className="Whats-app-but-sty inner-contant-style"
+                                    // number="918428952208"
+                                    // message="Hello World!!!"
+                                  message={`Bike Brand: ${selecteddata.brand}, Mode: ${selecteddata.model}, CC: ${selecteddata.cc}, Year: ${selecteddata.year}, Km: ${selecteddata.kms}, Location: ${selecteddata.location}, Condition: ${selecteddata.rangetext}, Live Insurance: ${selecteddata.insurance ==  0? 'No ': 'Yes'}`} 
+                                >
+                                    <ImWhatsapp size='30px' color='green' >
+                                    </ImWhatsapp>
+                                </ReactWhatsapp>
+
+
                             </div>
                         </Card>
                     </animate.Flip>
 
                     : null}
             </div>
-
+            <ToastContainer />
         </>
     );
 }
